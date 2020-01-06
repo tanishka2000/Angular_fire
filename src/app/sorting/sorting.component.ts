@@ -1,12 +1,15 @@
 
 
-import {Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core'; 
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 
+import { SortService } from 'src/app/shared/sort.service';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Sort } from 'src/app/shared/sort.model';
 
-export interface PeriodicElement {
+/*export interface PeriodicElement {
   name: string;
   type: string;
   fee: number;
@@ -24,7 +27,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {name: 'Oxygen', type: 'Machine Learning',fee: 15.9994, symbol: 'O'},
   {name: 'Fluorine', type: 'Android',fee: 18.9984, symbol: 'F'},
   {name: 'Neon', type: 'Web',fee: 20.1797, symbol: 'Ne'},
-];
+];*/
 
 /*function filterSelection(c) {
   //console.log("filterSelection");
@@ -89,23 +92,57 @@ function doit(){
   styleUrls: ['./sorting.component.css'],
 })
 
-export class SortingComponent {
+export class SortingComponent implements OnInit{
 
-  displayedColumns: string[] = ['name', 'fee', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  list: Sort[];
+  constructor(private service: SortService,
+    private firestore: AngularFirestore) { }
+
+  ngOnInit() {
+    this.myData();
+    //this.dataSource.sort = this.sort;
+    //this.dataSource.paginator = this.paginator;
+  }
+
+  arr : Sort[] = [];
+
+    listData: MatTableDataSource<Sort>;
+    //listData = new MatTableDataSource<Datatype>();
+    displayedColumns : string[] = ['idd','title','fee'];
+    //dataSource = new MatTableDataSource<Account>();
+
+  //displayedColumns: string[] = ['name', 'fee', 'symbol'];
+  //dataSource = new MatTableDataSource(ELEMENT_DATA);
 
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  ngOnInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    //filterSelection("Web")
-    //doit()
-  }
+ 
+
+  myData(){
+
+
+    this.service.getData().subscribe(actionArray => {
+      console.log("actionArray:: ", actionArray)
+      this.list = actionArray.map(item => {
+        return {
+          idd: item.payload.doc.id, ...item.payload.doc.data()
+        } as Sort;
+      })
+
+      //this.listData = new MatTableDataSource();
+      this.listData = new MatTableDataSource(this.list);
+      console.log("this.list:: ", this.list)
+      console.log("this.listData:: ", this.listData)
+      this.listData.sort = this.sort;
+      this.listData.paginator = this.paginator;
+    })
+
+
+}
 
   applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.listData.filter = filterValue.trim().toLowerCase();
   }
 
 }
