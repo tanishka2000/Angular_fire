@@ -14,6 +14,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { environment } from "../environments/environment";
 import { SortService } from './shared/sort.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SortService } from './shared/sort.service';
     MatSortModule,
     MatFormFieldModule, MatInputModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    NgbModule 
   ],
   providers: [SortService],
   bootstrap: [AppComponent]

@@ -1,5 +1,6 @@
 export class Sort {
-  idd: string;
-  title: string;
-  fee: string;
+  description: string;
+  location: string;
+  name: string;
+  salary: string;
 }

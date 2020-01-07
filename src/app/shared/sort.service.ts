@@ -11,7 +11,7 @@ export class SortService {
   constructor(private firestore: AngularFirestore) { }
 
   getData() {
-    console.log("this.firestore.collection('datas').snapshotChanges():: ", this.firestore.collection('employees').snapshotChanges())
-    return this.firestore.collection('datas').snapshotChanges();
+    console.log("this.firestore.collection('JOBS').snapshotChanges():: ", this.firestore.collection('employees').snapshotChanges())
+    return this.firestore.collection('JOBS').snapshotChanges();
   }
 }
